@@ -1,0 +1,35 @@
+name: "Local Docker Compose Health Check"
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  docker-health-when-fail:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Run local Docker Compose health check
+        uses: ./.github/actions/compose-health-check
+        with:
+          compose-project-directory: "."
+          compose-files: |
+            docker-compose.yml
+          services: "broken"
+          timeout: "10"
+          additional-compose-args: ""
+
+  assert-failure:
+    name: "Assert that previous job failed"
+    runs-on: ubuntu-latest
+    needs: docker-health-when-fail
+    steps:
+      - name: Check that healthcheck job failed as expected
+        run: |
+          if [ "${{ needs.should-fail.result }}" != "failure" ]; then
+            echo "❌ Expected healthcheck job to FAIL on broken compose, but it succeeded."
+            exit 1
+          fi
+          echo "✅ Negative test passed: healthcheck job failed as expected."

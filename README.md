@@ -89,7 +89,7 @@ Run the action locally with a modern GitHub Actions runner image:
 
 ```bash
 act push \
-  -W .github/workflows/local-compose-health.yml \
+  -W .github/workflows/local-compose-healthcheck-positive.yml \
   -a linux/amd64 \
   -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest
 ```
