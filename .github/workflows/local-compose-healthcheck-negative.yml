@@ -13,7 +13,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Run local Docker Compose health check (EXPECTED TO FAIL)
-        id: healthcheck
+        id: healthcheck_step
         uses: ./.github/actions/compose-health-check
         continue-on-error: true
         with:
@@ -24,7 +24,7 @@ jobs:
           timeout: "10"
           additional-compose-args: ""
       - name: Assert that healthcheck step failed
-        if: always()
+        if: steps.healthcheck_step.outcome != 'failure'
         run: |
           echo "Step outcome: ${{ steps.healthcheck.outcome }}"
           echo "Step conclusion: ${{ steps.healthcheck.conclusion }}"
