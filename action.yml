@@ -42,7 +42,7 @@ runs:
       run: |
         set -euo pipefail
 
-        SCRIPT_DIR="${GITHUB_WORKSPACE}"
+        SCRIPT_DIR="${GITHUB_ACTION_PATH}"
 
         project_dir="${{ inputs.compose-project-directory }}"
         project_dir="$(cd "$project_dir" && pwd)"
