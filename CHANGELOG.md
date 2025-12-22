@@ -1,4 +1,4 @@
-## v1.0.2 [*](https://github.com/ylazakovich/compose-health-check-action/pull/18) (22.12.2025)
+## v1.0.2 [\*](https://github.com/ylazakovich/compose-health-check-action/pull/18) (22.12.2025)
 
 - Added support for one-shot containers with `depends_on` relations by detecting exit codes
 - Improved service status detection to include stopped containers and categorize states (HEALTHY, COMPLETED, UNHEALTHY, FAILED, UP, NO_CONTAINERS)
