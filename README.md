@@ -56,7 +56,7 @@ pass or fail CI
 | `services`                | no       | Services to check (default: all)                                      |
 | `timeout`                 | no       | Timeout per service in seconds (default: 120)                         |
 | `additional-compose-args` | no       | Additional args for docker compose (e.g. `--quiet-pull` or `--build`) |
-| `report-format`           | no       | Healthcheck report format: `text`/`json`/`both` (default: `text`      |
+| `report-format`           | no       | Healthcheck report format: `text`/`json`/`both` (default: `text`)     |
 
 Example:
 
@@ -216,7 +216,7 @@ NAMES     STATUS    IMAGE
 ## 💻 Local usage with act
 
 ```bash
-act push   --rm   -W .github/workflows/healthy.yml   -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest
+act push   --rm   -W .github/workflows/bats.yml   -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest
 ```
 
 Or execute directly:
