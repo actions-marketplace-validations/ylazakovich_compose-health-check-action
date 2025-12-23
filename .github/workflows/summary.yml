@@ -1,0 +1,98 @@
+name: "Test Report"
+on:
+  workflow_run:
+    workflows: ["Tests"]
+    types:
+      - completed
+
+permissions:
+  contents: write
+  actions: read
+  checks: write
+
+jobs:
+  summary:
+    name: "Report summary"
+    runs-on: ubuntu-latest
+
+    outputs:
+      passed: ${{ steps.report.outputs.passed }}
+      failed: ${{ steps.report.outputs.failed }}
+      skipped: ${{ steps.report.outputs.skipped }}
+
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
+
+      - name: 📦Download artifacts (all junit-report-*)
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+          path: junit-report
+          pattern: junit-report-*
+          merge-multiple: true
+
+      - name: 🔬Report summary
+        id: report
+        uses: dorny/test-reporter@fe45e9537387dac839af0d33ba56eed8e24189e8 # v2
+        with:
+          name: "🔬Bats JUnit report"
+          path: "junit-report/**/*.xml"
+          reporter: java-junit
+
+  badge:
+    name: "Publish badge (main only)"
+    needs: summary
+    if: >
+      ${{
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main'
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔨Checkout
+        uses: actions/checkout@v6
+
+      - name: Build Shields endpoint JSON (passed/failed/skipped)
+        run: |
+          set -euo pipefail
+
+          passed="${{ needs.summary.outputs.passed }}"
+          failed="${{ needs.summary.outputs.failed }}"
+          skipped="${{ needs.summary.outputs.skipped }}"
+
+          if [[ -z "$passed" ]]; then passed="0"; fi
+          if [[ -z "$failed" ]]; then failed="0"; fi
+          if [[ -z "$skipped" ]]; then skipped="0"; fi
+
+          if [[ "$failed" != "0" ]]; then
+            color="red"
+            message="${passed} passed, ${failed} failed"
+          elif [[ "$skipped" != "0" ]]; then
+            color="yellow"
+            message="${passed} passed, ${skipped} skipped"
+          else
+            color="brightgreen"
+            message="${passed} passed"
+          fi
+
+          mkdir -p public
+          cat > public/tests.json <<JSON
+          {
+            "schemaVersion": 1,
+            "label": "bats tests",
+            "message": "${message}",
+            "color": "${color}"
+          }
+          JSON
+
+          echo "Badge JSON:"
+          cat public/tests.json
+
+      - name: Publish badge to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: public
+          keep_files: true
