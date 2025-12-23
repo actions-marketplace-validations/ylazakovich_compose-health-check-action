@@ -52,7 +52,7 @@ pass or fail CI
 
 | Input                     | Required | Description                                                           |
 | ------------------------- | -------- | --------------------------------------------------------------------- |
-| `compose-files`           | no       | One or more docker-compose files (default: `docker-compose.yml`       |
+| `compose-files`           | no       | One or more docker-compose files (default: `docker-compose.yml`)      |
 | `services`                | no       | Services to check (default: all)                                      |
 | `timeout`                 | no       | Timeout per service in seconds (default: 120)                         |
 | `additional-compose-args` | no       | Additional args for docker compose (e.g. `--quiet-pull` or `--build`) |
