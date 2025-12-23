@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-load '/usr/lib/bats-support/load'
-load '/usr/lib/bats-assert/load'
+load 'bats-support/load'
+load 'bats-assert/load'
 load './helpers.bash'
 
 @test "unhealthy: slow-broken becomes unhealthy and action fails" {
@@ -9,7 +9,7 @@ load './helpers.bash'
   export DOCKER_SERVICES_LIST="slow-broken"
   export DOCKER_HEALTH_REPORT_FORMAT="json"
 
-  run_healthcheck_action_sh docker compose -f docker-compose.yml up -d slow-broken
+  run_healthcheck_action_sh docker compose -f docker/docker-compose.unhealthy.yml up -d slow-broken
 
   assert_failure
   assert_json '.overall.status == "failed"'

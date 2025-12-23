@@ -20,6 +20,7 @@
 - uses: ylazakovich/compose-health-check-action@v1
   with:
     compose-files: docker-compose.yml
+    services: service_1, service_2 ...
 ```
 
 That’s it.  
@@ -222,7 +223,7 @@ act push   --rm   -W .github/workflows/bats.yml   -P ubuntu-latest=ghcr.io/catth
 Or execute directly:
 
 ```bash
-./action.sh docker compose up -d web
+./action.sh docker compose up -f docker/docker-compose.healthy.yml -d web
 ```
 
 ---
