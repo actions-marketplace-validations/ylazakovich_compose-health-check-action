@@ -19,8 +19,10 @@
 ```yaml
 - uses: ylazakovich/compose-health-check-action@v1
   with:
-    compose-files: docker-compose.yml
-    services: service_1, service_2 ...
+    compose-files: |
+      docker-compose.yml
+    services: |
+      service-1 
 ```
 
 That’s it.  
@@ -67,7 +69,9 @@ Example:
     compose-files: |
       docker-compose.yml
       docker-compose.override.yml
-    services: web api
+    services: |
+      db 
+      api
     timeout: 60
 ```
 
