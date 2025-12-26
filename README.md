@@ -19,8 +19,10 @@
 ```yaml
 - uses: ylazakovich/compose-health-check-action@v1
   with:
-    compose-files: docker-compose.yml
-    services: service_1, service_2 ...
+    compose-files: |
+      docker-compose.yml
+    services: |
+      service-1
 ```
 
 That’s it.  
@@ -53,8 +55,8 @@ pass or fail CI
 
 | Input                     | Required | Description                                                           |
 | ------------------------- | -------- | --------------------------------------------------------------------- |
-| `compose-files`           | no       | One or more docker-compose files (default: `docker-compose.yml`)      |
-| `services`                | no       | Services to check (default: all)                                      |
+| `compose-files`           | yes      | One or more docker-compose files (default: `docker-compose.yml`)      |
+| `services`                | yes      | Services to check                                                     |
 | `timeout`                 | no       | Timeout per service in seconds (default: 120)                         |
 | `additional-compose-args` | no       | Additional args for docker compose (e.g. `--quiet-pull` or `--build`) |
 | `report-format`           | no       | Healthcheck report format: `text`/`json`/`both` (default: `text`)     |
@@ -67,7 +69,9 @@ Example:
     compose-files: |
       docker-compose.yml
       docker-compose.override.yml
-    services: web api
+    services: |
+      db 
+      api
     timeout: 60
 ```
 
